@@ -43,8 +43,8 @@ public class MyAdapter extends ArrayAdapter<Model> {
 
         Model model = mInfoList.get(position);
 
-        TextView mName = listItem.findViewById(R.id.name_tv);
-        TextView mPassword = listItem.findViewById(R.id.password_tv);
+        TextView mName = listItem.findViewById(R.id.title_tv);
+        TextView mPassword = listItem.findViewById(R.id.note_tv);
 
         mName.setText(model.getName());
         mPassword.setText(model.getPassword());

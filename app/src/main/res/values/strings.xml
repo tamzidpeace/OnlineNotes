@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Online-Notes</string>
-    <string name="name">name</string>
-    <string name="password">password</string>
+    <string name="title">title</string>
+    <string name="note">note</string>
 </resources>
