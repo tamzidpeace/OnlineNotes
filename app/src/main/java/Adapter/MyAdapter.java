@@ -24,7 +24,7 @@ public class MyAdapter extends ArrayAdapter<Model> {
 
     // public constructor
     public MyAdapter(@NonNull Context context, ArrayList<Model> infoList) {
-        super(context, 0, infoList);
+        super(context, R.layout.list_item, infoList);
 
         mContext = context;
         mInfoList = infoList;
@@ -35,11 +35,11 @@ public class MyAdapter extends ArrayAdapter<Model> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        View listItem = convertView;
+        //getting the layout inflater
+        LayoutInflater inflater = LayoutInflater.from(mContext);
 
-        if(listItem == null) {
-            listItem = LayoutInflater.from(mContext).inflate(R.layout.list_item, parent, false);
-        }
+        //creating a view with our xml layout
+        View listItem = inflater.inflate(R.layout.list_item, null, true);
 
         Model model = mInfoList.get(position);
 
