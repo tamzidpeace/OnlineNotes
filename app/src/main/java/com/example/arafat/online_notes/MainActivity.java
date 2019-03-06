@@ -1,19 +1,27 @@
 package com.example.arafat.online_notes;
 
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 
 
+import com.android.volley.Cache;
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import Model.*;
@@ -30,15 +38,46 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(TAG, "onCreate: called");
 
         mListView = findViewById(R.id.list_view);
+        FloatingActionButton mFloatingActionBtn = findViewById(R.id.floatingActionButton);
 
-        showNotes(infoList);
+        // calling for showing all notes:
+        showNotes();
+
+        mFloatingActionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, AddNote.class));
+                finish();
+            }
+        });
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: called");
+    }
 
-    private void showNotes(final ArrayList<Model> infoList) {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: called");
+        //showNotes();
+
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: called");
+    }
+
+    private void showNotes() {
 
 
         String url = "http://192.168.43.30/Notes-Api/read-data.php";
@@ -73,7 +112,57 @@ public class MainActivity extends AppCompatActivity {
                         // TODO: Handle error
                         Log.d(TAG, "onErrorResponse: " + error.toString());
                     }
-                });
+                }) {
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                try {
+                    Cache.Entry cacheEntry = HttpHeaderParser.parseCacheHeaders(response);
+                    if (cacheEntry == null) {
+                        cacheEntry = new Cache.Entry();
+                    }
+                    final long cacheHitButRefreshed = 3 * 60 * 1000; // in 3 minutes cache will be hit, but also refreshed on background
+                    final long cacheExpired = 24 * 60 * 60 * 1000; // in 24 hours this cache entry expires completely
+                    long now = System.currentTimeMillis();
+                    final long softExpire = now + cacheHitButRefreshed;
+                    final long ttl = now + cacheExpired;
+                    cacheEntry.data = response.data;
+                    cacheEntry.softTtl = softExpire;
+                    cacheEntry.ttl = ttl;
+                    String headerValue;
+                    headerValue = response.headers.get("Date");
+                    if (headerValue != null) {
+                        cacheEntry.serverDate = HttpHeaderParser.parseDateAsEpoch(headerValue);
+                    }
+                    headerValue = response.headers.get("Last-Modified");
+                    if (headerValue != null) {
+                        cacheEntry.lastModified = HttpHeaderParser.parseDateAsEpoch(headerValue);
+                    }
+                    cacheEntry.responseHeaders = response.headers;
+                    final String jsonString = new String(response.data,
+                            HttpHeaderParser.parseCharset(response.headers));
+                    return Response.success(new JSONObject(jsonString), cacheEntry);
+                } catch (UnsupportedEncodingException e) {
+                    return Response.error(new ParseError(e));
+                } catch (JSONException e) {
+                    return Response.error(new ParseError(e));
+                }
+            }
+
+            @Override
+            protected void deliverResponse(JSONObject response) {
+                super.deliverResponse(response);
+            }
+
+            @Override
+            public void deliverError(VolleyError error) {
+                super.deliverError(error);
+            }
+
+            @Override
+            protected VolleyError parseNetworkError(VolleyError volleyError) {
+                return super.parseNetworkError(volleyError);
+            }
+        };
 
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(MainActivity.this).addToRequestQueue(jsonObjectRequest);

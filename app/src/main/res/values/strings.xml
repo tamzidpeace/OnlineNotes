@@ -2,4 +2,7 @@
     <string name="app_name">Online-Notes</string>
     <string name="title">title</string>
     <string name="note">note</string>
+    <string name="save">Save</string>
+    <string name="title2">Title</string>
+    <string name="note2">Note</string>
 </resources>
