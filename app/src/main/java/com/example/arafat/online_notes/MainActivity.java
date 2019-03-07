@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private ArrayList<Model> infoList = new ArrayList<>();
-    private String title, note;
+    private String title, note, id;
     private ListView mListView;
 
     @Override
@@ -89,15 +90,22 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
 
                         try {
+                            Log.d(TAG, "onResponse: " + response);
 
                             for (int i = 0; i < response.getJSONArray("DataArray").length(); i++) {
                                 title = response.getJSONArray("DataArray").getJSONObject(i).getString("Title");
                                 note = response.getJSONArray("DataArray").getJSONObject(i).getString("Note");
-                                infoList.add(new Model(title, note));
+                                id = response.getJSONArray("DataArray").getJSONObject(i).getString("ID");
+                                infoList.add(new Model(title, note, id));
                             }
 
                             MyAdapter adapter = new MyAdapter(getApplicationContext(), infoList);
                             mListView.setAdapter(adapter);
+                            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                }
+                            });
 
                             Log.d(TAG, "onResponse: " + title + note);
                         } catch (JSONException e) {
@@ -120,7 +128,8 @@ public class MainActivity extends AppCompatActivity {
                     if (cacheEntry == null) {
                         cacheEntry = new Cache.Entry();
                     }
-                    final long cacheHitButRefreshed = 3 * 60 * 1000; // in 3 minutes cache will be hit, but also refreshed on background
+                    final long cacheHitButRefreshed = 10000; // in 3 minutes cache will be hit, but also refreshed on background
+
                     final long cacheExpired = 24 * 60 * 60 * 1000; // in 24 hours this cache entry expires completely
                     long now = System.currentTimeMillis();
                     final long softExpire = now + cacheHitButRefreshed;

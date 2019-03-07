@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -19,6 +20,7 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,6 +66,8 @@ public class AddNote extends AppCompatActivity {
                 Network network = new BasicNetwork(new HurlStack());
 
                 requestQueue = new RequestQueue(cache, network);
+
+                //network.notify();
 
                 requestQueue.start();
 
