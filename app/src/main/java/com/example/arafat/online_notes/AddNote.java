@@ -34,7 +34,6 @@ public class AddNote extends AppCompatActivity {
     EditText addNote;
     EditText addTitle;
     Button saveBtn, updateBtn;
-    private int status = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,12 +119,61 @@ public class AddNote extends AppCompatActivity {
                 Log.d(TAG, "onClick: ");
 
                 Intent intent = getIntent();
-                String title = intent.getStringExtra("title");
-                String note = intent.getStringExtra("note");
-                String ids = intent.getStringExtra("id");
-                int id = Integer.parseInt(ids);
-                addNote.setText(note);
-                addTitle.setText(title);
+                /*String title = intent.getStringExtra("title");
+                String note = intent.getStringExtra("note");*/
+                final String id = intent.getStringExtra("id");
+                //addNote.setText(note);
+                //addTitle.setText(title);
+
+
+                RequestQueue requestQueue;
+
+
+                Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
+
+                Network network = new BasicNetwork(new HurlStack());
+
+                requestQueue = new RequestQueue(cache, network);
+
+                //network.notify();
+
+                requestQueue.start();
+
+                String url = "http://192.168.0.101/Notes-Api/update-data.php";
+
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                // Do something with the response
+                                Toast.makeText(AddNote.this, response, Toast.LENGTH_SHORT).show();
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // Handle error
+                                Toast.makeText(AddNote.this, error.toString(), Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "onErrorResponse: " + error.toString());
+                            }
+                        }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        String title = addTitle.getText().toString();
+                        String note = addNote.getText().toString();
+
+                        Map<String, String> param = new HashMap<>();
+                        param.put("title", title);
+                        param.put("note", note);
+                        param.put("id", id);
+                        Log.d(TAG, "getParams: " + title + note + id);
+                        return param;
+                    }
+                };
+
+                MySingleton.getInstance(AddNote.this).addToRequestQueue(stringRequest);
+                startActivity(new Intent(AddNote.this, MainActivity.class));
+
             }
         });
 
