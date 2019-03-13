@@ -20,6 +20,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.arafat.online_notes.AddNote;
 import com.example.arafat.online_notes.MainActivity;
 import com.example.arafat.online_notes.R;
 
@@ -70,6 +71,40 @@ public class MyAdapter extends ArrayAdapter<Model> {
 
         mName.setText(model.getName());
         mPassword.setText(model.getPassword());
+        
+        listItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final String title = model.getName();
+                final String note = model.getPassword();
+                Log.d(TAG, "onClick: single click " + title + " " + note);
+
+                AlertDialog.Builder alertbox = new AlertDialog.Builder(view.getRootView().getContext());
+                alertbox.setTitle(title);
+                alertbox.setMessage(note);
+                alertbox.setNeutralButton("Edit",
+                        new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                Log.d(TAG, "onClick: Edit");
+
+                                Intent intent = new Intent(mContext, AddNote.class);
+                                intent.putExtra("title", title);
+                                intent.putExtra("note", note);
+                                mContext.startActivity(intent);
+
+                            }
+                        });
+                alertbox.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(mContext, "OK", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                alertbox.show();
+            }
+        });
 
         listItem.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

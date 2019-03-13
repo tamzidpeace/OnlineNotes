@@ -102,7 +102,11 @@ public class AddNote extends AppCompatActivity {
         });
 
 
-
+        Intent intent = getIntent();
+        String title = intent.getStringExtra("title");
+        String note = intent.getStringExtra("note");
+        addNote.setText(note);
+        addTitle.setText(title);
         //finish();
 
     }
