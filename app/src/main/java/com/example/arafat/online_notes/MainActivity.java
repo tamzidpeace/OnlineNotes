@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                         // TODO: Handle error
                         Log.d(TAG, "onErrorResponse: " + error.toString());
                     }
-                }) {
+                }) /*{
             @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
                 try {
@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
             protected VolleyError parseNetworkError(VolleyError volleyError) {
                 return super.parseNetworkError(volleyError);
             }
-        };
+        }*/;
 
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(MainActivity.this).addToRequestQueue(jsonObjectRequest);

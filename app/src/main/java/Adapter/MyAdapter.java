@@ -59,7 +59,7 @@ public class MyAdapter extends ArrayAdapter<Model> {
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         //getting the layout inflater
-        LayoutInflater inflater = LayoutInflater.from(mContext);
+        final LayoutInflater inflater = LayoutInflater.from(mContext);
 
         //creating a view with our xml layout
         View listItem = inflater.inflate(R.layout.list_item, null, true);
@@ -92,6 +92,7 @@ public class MyAdapter extends ArrayAdapter<Model> {
                                 Intent intent = new Intent(mContext, AddNote.class);
                                 intent.putExtra("title", title);
                                 intent.putExtra("note", note);
+                                intent.putExtra("id", model.getId());
                                 mContext.startActivity(intent);
 
                             }

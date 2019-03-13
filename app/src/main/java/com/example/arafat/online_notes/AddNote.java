@@ -33,7 +33,8 @@ public class AddNote extends AppCompatActivity {
 
     EditText addNote;
     EditText addTitle;
-    Button saveBtn;
+    Button saveBtn, updateBtn;
+    private int status = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,8 @@ public class AddNote extends AppCompatActivity {
         addNote = findViewById(R.id.add_note);
         addTitle = findViewById(R.id.add_title);
         saveBtn = findViewById(R.id.save_note);
+        updateBtn = findViewById(R.id.updateBtn);
+
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,11 +105,31 @@ public class AddNote extends AppCompatActivity {
         });
 
 
+        // update note
+
+
         Intent intent = getIntent();
         String title = intent.getStringExtra("title");
         String note = intent.getStringExtra("note");
         addNote.setText(note);
         addTitle.setText(title);
+
+        updateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClick: ");
+
+                Intent intent = getIntent();
+                String title = intent.getStringExtra("title");
+                String note = intent.getStringExtra("note");
+                String ids = intent.getStringExtra("id");
+                int id = Integer.parseInt(ids);
+                addNote.setText(note);
+                addTitle.setText(title);
+            }
+        });
+
+
         //finish();
 
     }
