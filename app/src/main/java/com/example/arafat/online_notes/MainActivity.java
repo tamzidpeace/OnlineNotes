@@ -50,8 +50,19 @@ public class MainActivity extends AppCompatActivity {
         mFloatingActionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 startActivity(new Intent(MainActivity.this, AddNote.class));
+
+            }
+        });
+
+        mFloatingActionBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+
                 finish();
+                startActivity(getIntent());
+                return false;
             }
         });
 
@@ -67,9 +78,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume: called");
-        //showNotes();
-
-
     }
 
     @Override
@@ -81,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     private void showNotes() {
 
 
-        String url = "http://192.168.43.30/Notes-Api/read-data.php";
+        String url = "http://192.168.0.101/Notes-Api/read-data.php";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -101,11 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
                             MyAdapter adapter = new MyAdapter(getApplicationContext(), infoList);
                             mListView.setAdapter(adapter);
-                            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                }
-                            });
+                            //adapter.notifyDataSetChanged();
 
                             Log.d(TAG, "onResponse: " + title + note);
                         } catch (JSONException e) {
@@ -175,5 +179,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(MainActivity.this).addToRequestQueue(jsonObjectRequest);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: called");
     }
 }

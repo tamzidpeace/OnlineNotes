@@ -34,7 +34,6 @@ public class AddNote extends AppCompatActivity {
     EditText addNote;
     EditText addTitle;
     Button saveBtn;
-    Button backBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,14 +44,6 @@ public class AddNote extends AppCompatActivity {
         addNote = findViewById(R.id.add_note);
         addTitle = findViewById(R.id.add_title);
         saveBtn = findViewById(R.id.save_note);
-        backBtn = findViewById(R.id.back_btn);
-
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(AddNote.this, MainActivity.class));
-            }
-        });
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +62,7 @@ public class AddNote extends AppCompatActivity {
 
                 requestQueue.start();
 
-                String url = "http://192.168.43.30/Notes-Api/insert-data.php";
+                String url = "http://192.168.0.101/Notes-Api/insert-data.php";
 
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                         new Response.Listener<String>() {
@@ -104,8 +95,13 @@ public class AddNote extends AppCompatActivity {
                 MySingleton.getInstance(AddNote.this).addToRequestQueue(stringRequest);
 
 
+                startActivity(new Intent(AddNote.this, MainActivity.class));
+
             }
+
         });
+
+
 
         //finish();
 
@@ -131,8 +127,4 @@ public class AddNote extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        startActivity(new Intent(AddNote.this, AddNote.class));
-    }
 }

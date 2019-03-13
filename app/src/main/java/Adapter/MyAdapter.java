@@ -1,14 +1,18 @@
 package Adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -16,6 +20,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.arafat.online_notes.MainActivity;
 import com.example.arafat.online_notes.R;
 
 import java.util.ArrayList;
@@ -34,7 +39,9 @@ public class MyAdapter extends ArrayAdapter<Model> {
     // member variable
     private Context mContext;
     private ArrayList<Model> mInfoList;
-    private String a;
+    MainActivity mainActivity = new MainActivity();
+
+
 
     // public constructor
     public MyAdapter(@NonNull Context context, ArrayList<Model> infoList) {
@@ -67,8 +74,34 @@ public class MyAdapter extends ArrayAdapter<Model> {
         listItem.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                String id = model.getId();
-                deleteNote(id);
+
+
+                AlertDialog.Builder alertbox = new AlertDialog.Builder(view.getRootView().getContext());
+                alertbox.setMessage("Do you want to delete this note?");
+                alertbox.setTitle("Warning");
+                alertbox.setIcon(R.drawable.ic_warning_black_24dp);
+
+                alertbox.setNeutralButton("YES",
+                        new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                String id = model.getId();
+                                deleteNote(id);
+                                Toast.makeText(mContext, "Note has been deleted! You need to refresh activity", Toast.LENGTH_SHORT).show();
+                                /*finish();
+                                startActivity(getIntent());*/
+
+                            }
+                        });
+                alertbox.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(mContext, "OK", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                alertbox.show();
+
+
                 return false;
             }
         });
@@ -79,20 +112,11 @@ public class MyAdapter extends ArrayAdapter<Model> {
 
     private void deleteNote(final String id) {
 
-//        RequestQueue requestQueue;
-//
-//
-//        Cache cache = new DiskBasedCache(); // 1MB cap
-//
-//        Network network = new BasicNetwork(new HurlStack());
-//
-//        requestQueue = new RequestQueue(cache, network);
 
         RequestQueue queue = Volley.newRequestQueue(mContext);
 
 
-
-        String url = "http://192.168.43.30/Notes-Api/delete-data.php";
+        String url = "http://192.168.0.101/Notes-Api/delete-data.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -122,7 +146,7 @@ public class MyAdapter extends ArrayAdapter<Model> {
                 return param;
             }
         };
-        
+
         queue.add(stringRequest);
         //MySingleton.getInstance(mContext).addToRequestQueue(stringRequest);
     }
