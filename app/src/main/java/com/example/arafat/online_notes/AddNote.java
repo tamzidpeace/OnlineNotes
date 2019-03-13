@@ -1,5 +1,6 @@
 package com.example.arafat.online_notes;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,9 +32,10 @@ public class AddNote extends AppCompatActivity {
 
     private static final String TAG = "AddNote";
 
-    EditText addNote;
-    EditText addTitle;
-    Button saveBtn, updateBtn;
+    private EditText addNote;
+    private EditText addTitle;
+    private Button saveBtn, updateBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,72 +43,21 @@ public class AddNote extends AppCompatActivity {
         setContentView(R.layout.activity_add_note);
         Log.d(TAG, "onCreate: ");
 
+        //initializing views
         addNote = findViewById(R.id.add_note);
         addTitle = findViewById(R.id.add_title);
         saveBtn = findViewById(R.id.save_note);
         updateBtn = findViewById(R.id.updateBtn);
 
-
+        //save note
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                RequestQueue requestQueue;
-
-
-                Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
-
-                Network network = new BasicNetwork(new HurlStack());
-
-                requestQueue = new RequestQueue(cache, network);
-
-                //network.notify();
-
-                requestQueue.start();
-
-                String url = "http://192.168.0.101/Notes-Api/insert-data.php";
-
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                // Do something with the response
-                                Toast.makeText(AddNote.this, response, Toast.LENGTH_SHORT).show();
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                // Handle error
-                                Toast.makeText(AddNote.this, error.toString(), Toast.LENGTH_SHORT).show();
-                                Log.d(TAG, "onErrorResponse: " + error.toString());
-                            }
-                        }) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        String title = addTitle.getText().toString();
-                        String note = addNote.getText().toString();
-
-                        Map<String, String> param = new HashMap<>();
-                        param.put("title", title);
-                        param.put("note", note);
-                        return param;
-                    }
-                };
-
-                MySingleton.getInstance(AddNote.this).addToRequestQueue(stringRequest);
-
-
-                startActivity(new Intent(AddNote.this, MainActivity.class));
-
+                saveNote();
             }
-
         });
 
-
         // update note
-
-
         Intent intent = getIntent();
         String title = intent.getStringExtra("title");
         String note = intent.getStringExtra("note");
@@ -117,68 +68,112 @@ public class AddNote extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick: ");
-
-                Intent intent = getIntent();
-                /*String title = intent.getStringExtra("title");
-                String note = intent.getStringExtra("note");*/
-                final String id = intent.getStringExtra("id");
-                //addNote.setText(note);
-                //addTitle.setText(title);
-
-
-                RequestQueue requestQueue;
-
-
-                Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
-
-                Network network = new BasicNetwork(new HurlStack());
-
-                requestQueue = new RequestQueue(cache, network);
-
-                //network.notify();
-
-                requestQueue.start();
-
-                String url = "http://192.168.0.101/Notes-Api/update-data.php";
-
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                // Do something with the response
-                                Toast.makeText(AddNote.this, response, Toast.LENGTH_SHORT).show();
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                // Handle error
-                                Toast.makeText(AddNote.this, error.toString(), Toast.LENGTH_SHORT).show();
-                                Log.d(TAG, "onErrorResponse: " + error.toString());
-                            }
-                        }) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        String title = addTitle.getText().toString();
-                        String note = addNote.getText().toString();
-
-                        Map<String, String> param = new HashMap<>();
-                        param.put("title", title);
-                        param.put("note", note);
-                        param.put("id", id);
-                        Log.d(TAG, "getParams: " + title + note + id);
-                        return param;
-                    }
-                };
-
-                MySingleton.getInstance(AddNote.this).addToRequestQueue(stringRequest);
-                startActivity(new Intent(AddNote.this, MainActivity.class));
-
+                updateNote();
             }
         });
 
+    }
 
-        //finish();
+    private void saveNote() {
+
+        RequestQueue requestQueue;
+
+        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
+
+        Network network = new BasicNetwork(new HurlStack());
+
+        requestQueue = new RequestQueue(cache, network);
+
+        //network.notify();
+
+        requestQueue.start();
+
+        String url = "http://192.168.0.101/Notes-Api/insert-data.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Do something with the response
+                        Toast.makeText(AddNote.this, response, Toast.LENGTH_SHORT).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle error
+                        Toast.makeText(AddNote.this, error.toString(), Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "onErrorResponse: " + error.toString());
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                String title = addTitle.getText().toString();
+                String note = addNote.getText().toString();
+
+                Map<String, String> param = new HashMap<>();
+                param.put("title", title);
+                param.put("note", note);
+                return param;
+            }
+        };
+
+        MySingleton.getInstance(AddNote.this).addToRequestQueue(stringRequest);
+
+
+        startActivity(new Intent(AddNote.this, MainActivity.class));
+
+    }
+
+    private void updateNote() {
+
+        Intent intent = getIntent();
+        final String id = intent.getStringExtra("id");
+
+        RequestQueue requestQueue;
+
+        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
+
+        Network network = new BasicNetwork(new HurlStack());
+
+        requestQueue = new RequestQueue(cache, network);
+
+        requestQueue.start();
+
+        String url = "http://192.168.0.101/Notes-Api/update-data.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Do something with the response
+                        Toast.makeText(AddNote.this, response, Toast.LENGTH_SHORT).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle error
+                        Toast.makeText(AddNote.this, error.toString(), Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "onErrorResponse: " + error.toString());
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                String title = addTitle.getText().toString();
+                String note = addNote.getText().toString();
+
+                Map<String, String> param = new HashMap<>();
+                param.put("title", title);
+                param.put("note", note);
+                param.put("id", id);
+                Log.d(TAG, "getParams: " + title + note + id);
+                return param;
+            }
+        };
+
+        MySingleton.getInstance(AddNote.this).addToRequestQueue(stringRequest);
+        startActivity(new Intent(AddNote.this, MainActivity.class));
 
     }
 
@@ -198,7 +193,6 @@ public class AddNote extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         Log.d(TAG, "onPause: called");
-
 
     }
 

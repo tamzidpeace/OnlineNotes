@@ -1,5 +1,7 @@
 package com.example.arafat.online_notes;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 
@@ -87,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showNotes() {
-
 
         String url = "http://192.168.0.101/Notes-Api/read-data.php";
 

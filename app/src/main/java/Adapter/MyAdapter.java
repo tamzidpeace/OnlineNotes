@@ -1,5 +1,6 @@
 package Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,14 +36,11 @@ import Model.Model;
 public class MyAdapter extends ArrayAdapter<Model> {
 
     //const
-
     private static final String TAG = "MyAdapter";
 
     // member variable
     private Context mContext;
     private ArrayList<Model> mInfoList;
-    MainActivity mainActivity = new MainActivity();
-
 
 
     // public constructor
@@ -52,7 +51,6 @@ public class MyAdapter extends ArrayAdapter<Model> {
         mInfoList = infoList;
 
     }
-
 
     @NonNull
     @Override
@@ -69,12 +67,13 @@ public class MyAdapter extends ArrayAdapter<Model> {
         final TextView mName = listItem.findViewById(R.id.title_tv);
         TextView mPassword = listItem.findViewById(R.id.note_tv);
 
+
         mName.setText(model.getName());
         mPassword.setText(model.getPassword());
-        
+
         listItem.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
 
                 final String title = model.getName();
                 final String note = model.getPassword();
@@ -83,7 +82,7 @@ public class MyAdapter extends ArrayAdapter<Model> {
                 AlertDialog.Builder alertbox = new AlertDialog.Builder(view.getRootView().getContext());
                 alertbox.setTitle(title);
                 alertbox.setMessage(note);
-                alertbox.setNeutralButton("Edit",
+                alertbox.setNeutralButton("Update",
                         new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface arg0, int arg1) {
@@ -94,6 +93,7 @@ public class MyAdapter extends ArrayAdapter<Model> {
                                 intent.putExtra("note", note);
                                 intent.putExtra("id", model.getId());
                                 mContext.startActivity(intent);
+
 
                             }
                         });
@@ -111,7 +111,6 @@ public class MyAdapter extends ArrayAdapter<Model> {
             @Override
             public boolean onLongClick(View view) {
 
-
                 AlertDialog.Builder alertbox = new AlertDialog.Builder(view.getRootView().getContext());
                 alertbox.setMessage("Do you want to delete this note?");
                 alertbox.setTitle("Warning");
@@ -124,8 +123,7 @@ public class MyAdapter extends ArrayAdapter<Model> {
                                 String id = model.getId();
                                 deleteNote(id);
                                 Toast.makeText(mContext, "Note has been deleted! You need to refresh activity", Toast.LENGTH_SHORT).show();
-                                /*finish();
-                                startActivity(getIntent());*/
+
 
                             }
                         });
@@ -182,8 +180,6 @@ public class MyAdapter extends ArrayAdapter<Model> {
                 return param;
             }
         };
-
         queue.add(stringRequest);
-        //MySingleton.getInstance(mContext).addToRequestQueue(stringRequest);
     }
 }
