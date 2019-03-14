@@ -53,8 +53,9 @@ public class MainActivity extends AppCompatActivity {
         mFloatingActionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                startActivity(new Intent(MainActivity.this, AddNote.class));
+                Intent intent = new Intent(MainActivity.this, AddNote.class);
+                intent.putExtra("status", "2");
+                startActivity(intent);
 
             }
         });

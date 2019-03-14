@@ -35,6 +35,7 @@ public class AddNote extends AppCompatActivity {
     private EditText addNote;
     private EditText addTitle;
     private Button saveBtn, updateBtn;
+    private String status = "2";
 
 
     @Override
@@ -61,6 +62,14 @@ public class AddNote extends AppCompatActivity {
         Intent intent = getIntent();
         String title = intent.getStringExtra("title");
         String note = intent.getStringExtra("note");
+        status = intent.getStringExtra("status");
+        if (status.equals("1")) {
+            saveBtn.setVisibility(View.GONE);
+        } else {
+            updateBtn.setVisibility(View.GONE);
+        }
+
+
         addNote.setText(note);
         addTitle.setText(title);
 

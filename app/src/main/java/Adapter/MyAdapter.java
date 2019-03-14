@@ -92,6 +92,7 @@ public class MyAdapter extends ArrayAdapter<Model> {
                                 intent.putExtra("title", title);
                                 intent.putExtra("note", note);
                                 intent.putExtra("id", model.getId());
+                                intent.putExtra("status", "1");
                                 mContext.startActivity(intent);
 
 
