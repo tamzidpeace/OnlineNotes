@@ -151,7 +151,7 @@ public class MyAdapter extends ArrayAdapter<Model> {
         RequestQueue queue = Volley.newRequestQueue(mContext);
 
 
-        String url = "http://192.168.0.101/Notes-Api/delete-data.php";
+        String url = "http://192.168.0.105/Notes-Api/delete-data.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {

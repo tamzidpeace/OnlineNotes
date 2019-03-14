@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showNotes() {
 
-        String url = "http://192.168.0.101/Notes-Api/read-data.php";
+        String url = "http://192.168.0.105/Notes-Api/read-data.php";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {

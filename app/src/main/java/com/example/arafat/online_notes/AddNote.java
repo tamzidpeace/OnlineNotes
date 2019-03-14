@@ -97,7 +97,7 @@ public class AddNote extends AppCompatActivity {
 
         requestQueue.start();
 
-        String url = "http://192.168.0.101/Notes-Api/insert-data.php";
+        String url = "http://192.168.0.105/Notes-Api/insert-data.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -149,7 +149,7 @@ public class AddNote extends AppCompatActivity {
 
         requestQueue.start();
 
-        String url = "http://192.168.0.101/Notes-Api/update-data.php";
+        String url = "http://192.168.0.105/Notes-Api/update-data.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
