@@ -97,7 +97,7 @@ public class AddNote extends AppCompatActivity {
 
         requestQueue.start();
 
-        String url = "http://192.168.0.105/Notes-Api/insert-data.php";
+        String url = "http://192.168.0.103/Notes-Api/insert-data.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {

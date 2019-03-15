@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
 
         requestQueue.start();
 
-        String url = "http://192.168.0.105/Notes-Api/user_login.php";
+        String url = "http://192.168.0.103/Notes-Api/test_login.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         // Do something with the response
                         Toast.makeText(LoginActivity.this, response, Toast.LENGTH_SHORT).show();
-                        if (response.equals("Login Success")) {
+                        if (response.equals(userName.getText().toString())) {
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         }
                     }

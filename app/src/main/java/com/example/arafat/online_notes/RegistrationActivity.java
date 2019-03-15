@@ -76,7 +76,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         requestQueue.start();
 
-        String url = "http://192.168.0.105/Notes-Api/user_registration.php";
+        String url = "http://192.168.0.103/Notes-Api/user_registration.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {

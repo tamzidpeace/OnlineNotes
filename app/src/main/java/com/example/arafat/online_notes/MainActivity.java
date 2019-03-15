@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private ArrayList<Model> infoList = new ArrayList<>();
-    private String title, note, id;
+    private String title, note, id, user_name;
     private ListView mListView;
 
     @Override
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showNotes() {
 
-        String url = "http://192.168.0.105/Notes-Api/read-data.php";
+        String url = "http://192.168.0.103/Notes-Api/read-data.php";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -107,7 +107,8 @@ public class MainActivity extends AppCompatActivity {
                                 title = response.getJSONArray("DataArray").getJSONObject(i).getString("Title");
                                 note = response.getJSONArray("DataArray").getJSONObject(i).getString("Note");
                                 id = response.getJSONArray("DataArray").getJSONObject(i).getString("ID");
-                                infoList.add(new Model(title, note, id));
+                                user_name = response.getJSONArray("DataArray").getJSONObject(i).getString("USER_NAME");
+                                infoList.add(new Model(title, note, id,user_name));
                             }
 
                             MyAdapter adapter = new MyAdapter(getApplicationContext(), infoList);
