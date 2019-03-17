@@ -1,6 +1,8 @@
 package com.example.arafat.online_notes;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,12 +33,18 @@ public class RegistrationActivity extends AppCompatActivity {
     private static final String TAG = "RegistrationActivity";
 
     //member variable
+    private Context mContext;
     EditText userName, userPass, userEmail;
+    private String username = "";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+
+        mContext = getApplicationContext();
 
         userName = findViewById(R.id.user_name);
         userPass = findViewById(R.id.user_pass);
@@ -58,6 +66,17 @@ public class RegistrationActivity extends AppCompatActivity {
                 startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences("MyPref", MODE_PRIVATE);
+        username = sharedPreferences.getString("name", null);
+
+        if (username != null)
+            startActivity(new Intent(mContext, LoginActivity.class));
     }
 
     private void userRegistration() {
@@ -111,8 +130,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     param.put("user_pass", user_pass);
                     param.put("user_email", user_email);
                     return param;
-                }
-                else {
+                } else {
                     Toast.makeText(RegistrationActivity.this, "Fill all three fields", Toast.LENGTH_SHORT).show();
                 }
                 return param;

@@ -34,13 +34,17 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
 
     //member variable
-    EditText userName, userPass;
+    private EditText userName, userPass;
     private SharedPreferences pref;
+    private Context mContext;
+    private String username= "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mContext = getApplicationContext();
 
         userName = findViewById(R.id.user_name_login);
         userPass = findViewById(R.id.editText2);
@@ -54,6 +58,17 @@ public class LoginActivity extends AppCompatActivity {
                 userLogin();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences("MyPref", MODE_PRIVATE);
+        username = sharedPreferences.getString("name", null);
+
+        if (username != null)
+            startActivity(new Intent(mContext, MainActivity.class));
     }
 
     private void userLogin() {

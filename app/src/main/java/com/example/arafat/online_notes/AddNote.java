@@ -120,8 +120,6 @@ public class AddNote extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() {
 
-                Model model = new Model();
-
                 String title = addTitle.getText().toString();
                 String note = addNote.getText().toString();
                 SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
@@ -157,7 +155,7 @@ public class AddNote extends AppCompatActivity {
 
         requestQueue.start();
 
-        String url = "http://192.168.0.105/Notes-Api/update-data.php";
+        String url = "http://192.168.0.103/Notes-Api/update-data.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
