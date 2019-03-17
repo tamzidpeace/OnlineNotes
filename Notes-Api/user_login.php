@@ -25,10 +25,19 @@ $result = mysqli_query($con, $sql);
 $response = array();
 
 if(mysqli_num_rows($result)>0) {
-  echo "Login Success";
+  $row = $result-> fetch_assoc();
+  //array_push($response, array("USER_NAME" => $row["user_name"]));
+  echo $row["user_name"];
+  //$response['USER_NAME'] = $row["user_name"];
 } else {
-  echo "Login fail";
+  echo "invalid username or password!";
+  //$response['USER_NAME'] = "invalid user_name or password";
 }
 
+//echo json_encode(array("DataArray" => $response));
+
   // 192.168.0.105/Notes-Api/user_login.php (base url)
+
+  //{"DataArray":[{"USER_NAME":"aa"}]}
+  //{"DataArray":{"USER_NAME":"invalid user_name or password"}}
 ?>

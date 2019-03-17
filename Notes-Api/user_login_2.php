@@ -1,4 +1,3 @@
-
 <?php
 
 $serverName = "localhost";
@@ -14,41 +13,37 @@ $con = new mysqli($serverName, $userName, $password, $dbName);
 
 if($con -> connect_error) {
   die("Connection error: " . $con -> connect_error);
+} else {
+  echo "success";
 }
 
 $response = array();
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
   // DO SOMETHING
-  $title = $_REQUEST['title'];
-  $note = $_REQUEST['note'];
-  $user_name = $_REQUEST['user_name'];
+  $use_name = $_REQUEST['user_name'];
 
-  $sql = "INSERT INTO notes (title, note, user_name) VALUES (?, ?, ?)";
+  $sql = "select * from user_registration where user_name = ? ";
 
   $stmt = $con->prepare($sql);
 
-  $stmt -> bind_param("sss", $title, $note, $user_name);
+  $stmt -> bind_param("s", $user_name);
+  $stmt->execute();
+  $stmt->store_result();
 
-  //if data inserts successfully
-	if($stmt->execute()){
-		//making success response
+    if($stmt->num_rows>0) {
+      $response['true'] = true;
+    } else {
+      $response['fail'] = false;
+    }
 		$response['error'] = false;
 		$response['message'] = 'Note saved successfully';
-	}else{
+}else{
 		//if not making failure response
 		$response['error'] = true;
 		$response['message'] = 'Please try later';
-	}
-
-} else {
-
-  $response['error'] = true;
-  $response['message'] = "invalid request";
 }
 
 echo json_encode($response);
 
-// "http://192.168.43.30/Notes-Api/insert-data.php"
-
- ?>
+?>

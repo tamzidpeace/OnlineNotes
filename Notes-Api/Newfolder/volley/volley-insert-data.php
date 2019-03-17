@@ -20,21 +20,20 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
   // DO SOMETHING
-  $title = $_REQUEST['title'];
-  $note = $_REQUEST['note'];
-  $user_name = $_REQUEST['user_name'];
+  $name = $_REQUEST['name'];
+  $pass = $_REQUEST['pass'];
 
-  $sql = "INSERT INTO notes (title, note, user_name) VALUES (?, ?, ?)";
+  $sql = "INSERT INTO registration_info_2 (name, password) VALUES (?, ?)";
 
   $stmt = $con->prepare($sql);
 
-  $stmt -> bind_param("sss", $title, $note, $user_name);
+  $stmt -> bind_param("ss", $name, $pass);
 
   //if data inserts successfully
 	if($stmt->execute()){
 		//making success response
 		$response['error'] = false;
-		$response['message'] = 'Note saved successfully';
+		$response['message'] = 'Name saved successfully';
 	}else{
 		//if not making failure response
 		$response['error'] = true;
@@ -49,6 +48,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 echo json_encode($response);
 
-// "http://192.168.43.30/Notes-Api/insert-data.php"
+// "http://192.168.43.30/volley/volley-insert-data.php"
 
  ?>

@@ -29,6 +29,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
   $stmt->execute();
   $result = $stmt->get_result();
 
+  // optional
+  // $result2 = $stmt->show_result();
+  // echo $result2;
+
   if($result->num_rows>0) {
     $row = $result-> fetch_assoc();
     echo $row["user_name"];
