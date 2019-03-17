@@ -2,6 +2,7 @@ package com.example.arafat.online_notes;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +27,7 @@ import com.android.volley.toolbox.Volley;
 import java.util.HashMap;
 import java.util.Map;
 
+import Model.Model;
 import Model.MySingleton;
 
 public class AddNote extends AppCompatActivity {
@@ -117,20 +119,26 @@ public class AddNote extends AppCompatActivity {
                 }) {
             @Override
             protected Map<String, String> getParams() {
+
+                Model model = new Model();
+
                 String title = addTitle.getText().toString();
                 String note = addNote.getText().toString();
+                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+                String user_name = sharedPreferences.getString("name", null);
 
                 Map<String, String> param = new HashMap<>();
                 param.put("title", title);
                 param.put("note", note);
+                param.put("user_name", user_name);
                 return param;
             }
         };
 
         MySingleton.getInstance(AddNote.this).addToRequestQueue(stringRequest);
 
-
-        startActivity(new Intent(AddNote.this, MainActivity.class));
+        Intent intent = new Intent(AddNote.this, MainActivity.class);
+        startActivity(intent);
 
     }
 

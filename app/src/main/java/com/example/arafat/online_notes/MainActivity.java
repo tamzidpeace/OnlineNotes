@@ -3,6 +3,7 @@ package com.example.arafat.online_notes;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,8 +12,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -22,11 +25,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import Model.*;
 import Adapter.MyAdapter;
@@ -35,8 +41,12 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private ArrayList<Model> infoList = new ArrayList<>();
-    private String title, note, id, user_name;
+    private String title, note, id, user_name, username;
     private ListView mListView;
+    private String mUserName = "";
+    private SharedPreferences pref;
+    private int status = 0;
+    private String status2 = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +57,11 @@ public class MainActivity extends AppCompatActivity {
         mListView = findViewById(R.id.list_view);
         FloatingActionButton mFloatingActionBtn = findViewById(R.id.floatingActionButton);
 
+
         // calling for showing all notes:
-        showNotes();
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        username = sharedPreferences.getString("name", null);
+        showNotes(username);
 
         mFloatingActionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,16 +103,17 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onPause: called");
     }
 
-    private void showNotes() {
+    private void showNotes(String username) {
 
-        String url = "http://192.168.0.103/Notes-Api/read-data.php";
+
+        String url = "http://192.168.0.103/Notes-Api/read-data.php?user_name=" + username;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
-
+                        //Log.d(TAG, "onResponse: " + response);
                         try {
                             Log.d(TAG, "onResponse: " + response);
 
@@ -108,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                                 note = response.getJSONArray("DataArray").getJSONObject(i).getString("Note");
                                 id = response.getJSONArray("DataArray").getJSONObject(i).getString("ID");
                                 user_name = response.getJSONArray("DataArray").getJSONObject(i).getString("USER_NAME");
-                                infoList.add(new Model(title, note, id,user_name));
+                                infoList.add(new Model(title, note, id));
                             }
 
                             MyAdapter adapter = new MyAdapter(getApplicationContext(), infoList);
@@ -128,7 +142,23 @@ public class MainActivity extends AppCompatActivity {
                         // TODO: Handle error
                         Log.d(TAG, "onErrorResponse: " + error.toString());
                     }
-                }) /*{
+                });
+
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(MainActivity.this).addToRequestQueue(jsonObjectRequest);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: called");
+    }
+}
+
+
+// offline feature
+
+/*{
             @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
                 try {
@@ -179,15 +209,4 @@ public class MainActivity extends AppCompatActivity {
             protected VolleyError parseNetworkError(VolleyError volleyError) {
                 return super.parseNetworkError(volleyError);
             }
-        }*/;
-
-        // Access the RequestQueue through your singleton class.
-        MySingleton.getInstance(MainActivity.this).addToRequestQueue(jsonObjectRequest);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy: called");
-    }
-}
+        }*/

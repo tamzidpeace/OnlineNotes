@@ -1,15 +1,21 @@
 package Model;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 public class Model {
 
     private String name, password;
     private String id, user_name;
 
-    public Model(String name, String password, String id, String user_name) {
+    public Model(String name, String password, String id) {
         this.name = name;
         this.password = password;
         this.id = id;
-        this.user_name = user_name;
+    }
+
+
+    public Model() {
     }
 
     public String getName() {
@@ -27,4 +33,6 @@ public class Model {
     public String getUser_name() {
         return user_name;
     }
+
+
 }

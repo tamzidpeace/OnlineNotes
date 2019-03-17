@@ -1,6 +1,8 @@
 package com.example.arafat.online_notes;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +25,7 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+import Model.Model;
 import Model.MySingleton;
 
 public class LoginActivity extends AppCompatActivity {
@@ -32,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
 
     //member variable
     EditText userName, userPass;
+    private SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +66,13 @@ public class LoginActivity extends AppCompatActivity {
 
         requestQueue = new RequestQueue(cache, network);
 
-        //network.notify();
-
         requestQueue.start();
+
+
+        // storing data using sharedPreference
+        pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("name", userName.getText().toString()).apply();
 
         String url = "http://192.168.0.103/Notes-Api/test_login.php";
 
@@ -74,8 +82,12 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         // Do something with the response
                         Toast.makeText(LoginActivity.this, response, Toast.LENGTH_SHORT).show();
+                        //String user_name = userPass.getText().toString();
+
                         if (response.equals(userName.getText().toString())) {
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            //intent.putExtra("user_name", user_name);
+                            startActivity(intent);
                         }
                     }
                 },
