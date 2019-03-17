@@ -47,11 +47,19 @@ public class LoginActivity extends AppCompatActivity {
         userPass = findViewById(R.id.editText2);
 
         Button loginBtn = findViewById(R.id.login_btn_ln);
+        Button backToSignUp = findViewById(R.id.back_to_register);
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 userLogin();
+            }
+        });
+
+        backToSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(mContext, RegistrationActivity.class));
             }
         });
     }
