@@ -25,7 +25,6 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-import Model.Model;
 import Model.MySingleton;
 
 public class LoginActivity extends AppCompatActivity {
@@ -35,9 +34,7 @@ public class LoginActivity extends AppCompatActivity {
 
     //member variable
     private EditText userName, userPass;
-    private SharedPreferences pref;
     private Context mContext;
-    private String username= "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +51,6 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 userLogin();
             }
         });
@@ -65,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onResume();
 
         SharedPreferences sharedPreferences = mContext.getSharedPreferences("MyPref", MODE_PRIVATE);
-        username = sharedPreferences.getString("name", null);
+        String username = sharedPreferences.getString("name", null);
 
         if (username != null)
             startActivity(new Intent(mContext, MainActivity.class));
@@ -85,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         // storing data using sharedPreference
-        pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("name", userName.getText().toString()).apply();
 

@@ -1,6 +1,5 @@
 package com.example.arafat.online_notes;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +12,6 @@ import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -22,12 +20,10 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import Model.Model;
 import Model.MySingleton;
 
 public class AddNote extends AppCompatActivity {
@@ -36,8 +32,6 @@ public class AddNote extends AppCompatActivity {
 
     private EditText addNote;
     private EditText addTitle;
-    private Button saveBtn, updateBtn;
-    private String status = "2";
 
 
     @Override
@@ -49,8 +43,8 @@ public class AddNote extends AppCompatActivity {
         //initializing views
         addNote = findViewById(R.id.add_note);
         addTitle = findViewById(R.id.add_title);
-        saveBtn = findViewById(R.id.save_note);
-        updateBtn = findViewById(R.id.updateBtn);
+        Button saveBtn = findViewById(R.id.save_note);
+        Button updateBtn = findViewById(R.id.updateBtn);
 
         //save note
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +58,7 @@ public class AddNote extends AppCompatActivity {
         Intent intent = getIntent();
         String title = intent.getStringExtra("title");
         String note = intent.getStringExtra("note");
-        status = intent.getStringExtra("status");
+        String status = intent.getStringExtra("status");
         if (status.equals("1")) {
             saveBtn.setVisibility(View.GONE);
         } else {
@@ -128,7 +122,9 @@ public class AddNote extends AppCompatActivity {
                 Map<String, String> param = new HashMap<>();
                 param.put("title", title);
                 param.put("note", note);
-                param.put("user_name", user_name);
+                if (user_name != null) {
+                    param.put("user_name", user_name);
+                }
                 return param;
             }
         };

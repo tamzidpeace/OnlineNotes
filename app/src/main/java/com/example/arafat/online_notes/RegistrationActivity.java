@@ -35,9 +35,6 @@ public class RegistrationActivity extends AppCompatActivity {
     //member variable
     private Context mContext;
     EditText userName, userPass, userEmail;
-    private String username = "";
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +70,7 @@ public class RegistrationActivity extends AppCompatActivity {
         super.onResume();
 
         SharedPreferences sharedPreferences = mContext.getSharedPreferences("MyPref", MODE_PRIVATE);
-        username = sharedPreferences.getString("name", null);
+        String username = sharedPreferences.getString("name", null);
 
         if (username != null)
             startActivity(new Intent(mContext, LoginActivity.class));
